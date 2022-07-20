@@ -339,3 +339,46 @@ video_id int not null references video(id),
 articales_id int not null references articales(id),
 practic_material_id int not null references practic_material(id),
 tests_id int not null references tests(id));
+create table bills(
+id uuid default uuid_generate_v4() primary key,
+bills_path varchar);
+
+
+create sequence p_schedule;
+create table payment_schedule(
+id int not null default nextval('p_schedule') primary key,
+pay_up_to date not null,
+payment_description varchar,
+to_pay int not null);
+
+create sequence p_details;
+create table payment_details(
+id int not null default nextval('p_details') primary key,
+recipient varchar not null,
+inn int8 not null,
+bik int8 not null,
+checking_account varchar not null,
+purpose_of_payment varchar not null);
+
+drop table payment_details; 
+
+insert into payment_details (recipient, inn, bik, checking_account,
+purpose_of_payment)
+values('Филиал «Академия Шаг Ярославль» 
+Автономная некоммерческая организация дополнительного 
+профессионального образования «Академия Шаг»', 7730257499, 044525700, 
+'40703810500000002865', 'Нет суммы по графику 1C код: 199017632 ');
+
+create table payment_history(
+id uuid default uuid_generate_v4() primary key,
+payment_date date not null,
+purpose_of_payment varchar not null,
+paid int not null);
+
+create sequence payments_id;
+create table payments(
+id int not null default nextval('payments_id') primary key,
+bill_id uuid not null references bills(id),
+payment_schedule_id int not null references payment_schedule(id),
+payment_details_id int not null references payment_details(id),
+payment_history_id uuid not null references payment_history(id));

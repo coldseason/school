@@ -1,6 +1,5 @@
-create extension if not exists "uuid-ossp";
-
 create database school;
+create extension if not exists "uuid-ossp";
 
 
 create sequence week_id;
@@ -85,7 +84,6 @@ values
 ('20:00 - 21:20', 13);
 
 
-
 create table edu_records(
 id uuid default uuid_generate_v4() primary key,
 lesson_id int not null references lessons(id),
@@ -96,14 +94,14 @@ teacher_id int not null references teachers(id));
 
 insert into edu_records(lesson_id, time_id, auditorium_id, teacher_id)
 values
-(1, 15, 3, 1),
-(1, 23, 3, 1);
+(1, 7, 3, 1),
+(1, 13, 3, 1);
 
 
 insert into edu_records(lesson_id, time_id, auditorium_id, teacher_id)
 values
-(2, 15, 3, 1),
-(2, 23, 3, 1);
+(2, 7, 3, 1),
+(2, 13, 3, 1);
 
 
 create sequence calender_id;
@@ -114,21 +112,20 @@ week_id int not null references week(id),
 cur_date date not null,
 edu_record uuid references edu_records(id));
 
-insert into calendar (month_id, week_id, cur_date, edu_record)
+insert into calendar (month_id, week_id, cur_date)
 values
-(1, 3, '2022-01-12', 'af438c72-434b-4a0d-9667-f46404943994'),
-(1, 3, '2022-01-12', '30983e44-ff03-4289-b835-1161f4083903'),
-(1, 5, '2022-01-14', 'af438c72-434b-4a0d-9667-f46404943994'),
-(1, 5, '2022-01-14', '30983e44-ff03-4289-b835-1161f4083903'),
-(1, 3, '2022-01-19', 'af438c72-434b-4a0d-9667-f46404943994'),
-(1, 3, '2022-01-19', '30983e44-ff03-4289-b835-1161f4083903'),
-(1, 5, '2022-01-21', 'af438c72-434b-4a0d-9667-f46404943994'),
-(1, 5, '2022-01-21', '30983e44-ff03-4289-b835-1161f4083903'),
-(1, 3, '2022-01-26', 'af438c72-434b-4a0d-9667-f46404943994'),
-(1, 3, '2022-01-26', '30983e44-ff03-4289-b835-1161f4083903'),
-(1, 5, '2022-01-28', 'af438c72-434b-4a0d-9667-f46404943994'),
-(1, 5, '2022-01-28', '30983e44-ff03-4289-b835-1161f4083903');
-
+(1, 3, '2022-01-12'),
+(1, 3, '2022-01-12'),
+(1, 5, '2022-01-14'),
+(1, 5, '2022-01-14'),
+(1, 3, '2022-01-19'),
+(1, 3, '2022-01-19'),
+(1, 5, '2022-01-21'),
+(1, 5, '2022-01-21'),
+(1, 3, '2022-01-26'),
+(1, 3, '2022-01-26'),
+(1, 5, '2022-01-28'),
+(1, 5, '2022-01-28');
 
 
 
@@ -194,7 +191,7 @@ values (1, 1), (2, 1),(3, 1),(4, 1),(5, 1),(6, 1),(7, 1),(8, 1),(9, 1),(10, 1),(
 create sequence number_of_class;
 create table grades_main_table(
 id uuid default uuid_generate_v4() primary key,
-date_id date not null references calendar(id),
+date_id int not null references calendar(id),
 number_of_lesson int not null default nextval('number_of_class'),
 lesson_name_id int not null references lessons(id),
 class_number_id int not null references lessons_time(id),
@@ -206,7 +203,7 @@ student_status int not null references student_presents(id));
 
 insert into grades_main_table (date_id, lesson_name_id, class_number_id, teacher_id, lesson_theme, student_status)
 values 
-('2022-01-12', 1, 23, 1, 1, 3);
+(1, 1, 13, 1, 1, 3);
 
 
 create sequence homework_status_id;
@@ -340,10 +337,7 @@ articales_id int not null references articales(id),
 practic_material_id int not null references practic_material(id),
 tests_id int not null references tests(id));
 
-teachers review
 
-
---payment information
 
 create table bills(
 id uuid default uuid_generate_v4() primary key,
@@ -365,7 +359,6 @@ bik int8 not null,
 checking_account varchar not null,
 purpose_of_payment varchar not null);
 
-drop table payment_details; 
 
 insert into payment_details (recipient, inn, bik, checking_account,
 purpose_of_payment)
@@ -388,8 +381,6 @@ payment_schedule_id int not null references payment_schedule(id),
 payment_details_id int not null references payment_details(id),
 payment_history_id uuid not null references payment_history(id));
 
-
---personal information
 
 create table personal_info(
 id uuid default uuid_generate_v4() primary key,
